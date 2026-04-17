@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Login{% endblock %}
+{% block nav %}
+    <a href="/register"> Register</a>
+    <a href="/login"> Login</a>
+{% endblock %}
+{% block content %}
+<div class="card">
+    <h2>Logare</h2>
+    <div id="message"></div>
+    <div class="form-group">
+        <label>Email</label>
+        <input type="email" id="email" placeholder="email"/>
+    </div>
+    <div class="form-group">
+        <label>Parola</label>
+        <input type="password" id="password"/>
+    </div>
+        
+    </div>
+    <button onclick="login()">Login</button>
+    <p class="text-center mt"> 
+        <a href="/register">Creaza un cont</a>
+        <a href="/forgot-password">Am uitat parola</a>
+    </p>
+</div>
+{% endblock %}

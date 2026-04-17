@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="/static/style.css">
+    </head>
+
+    <body>
+        <nav>
+            <div class="logo"><span>Vulnerabil</span></div>
+            <div class="nav-links">
+                {% block nav %}{% endblock %}
+            </div>
+        </nav>
+        <div class="container">
+            {% block content % }{% endblock %}
+        </div>
+        <script src="/static/js/auth.js"></script>
+        {% block scripts %}{% endblock %}
+    </body>
+</html>
