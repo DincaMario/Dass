@@ -4,7 +4,7 @@ async function Register(){
     var confirmPassword = document.getElementById('confirmPassword').value
     var role = document.getElementById('role').value
 
-    var res = await fetch('/register', {
+    var res = await fetch('/api/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json'},
         body: JSON.stringify({email: email, password: password, role: role, confirmPassword: confirmPassword})
@@ -22,7 +22,7 @@ async function Login(){
     var email = document.getElementById('email').value
     var password = document.getElementById('password').value;
 
-        var res = await fetch('/login', {
+        var res = await fetch('/api/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json'},
         body: JSON.stringify({email: email, password: password})
@@ -30,7 +30,7 @@ async function Login(){
 
     var data = await res.json();
 
-        var data = await res.json();
+    
     if( res.ok){
         window.location.href = '/dashboard'
     }else{
