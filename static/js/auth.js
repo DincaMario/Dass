@@ -12,9 +12,11 @@ async function Register(){
 
     var data = await res.json();
     if( res.ok){
+        showMessage('message', 'success', data.message);
         window.location.href = '/login'
     }else{
         console.log(data.error)
+        showMessage('message', 'error', data.error);
     }
 }
 
@@ -32,9 +34,11 @@ async function Login(){
 
     
     if( res.ok){
+        showMessage('message', 'success', data.message);
         window.location.href = '/dashboard'
     }else{
         console.log(data.error)
+        showMessage('message', 'error', data.error);
     }
 }
 
@@ -122,3 +126,7 @@ async function Reset(token) {
     }
 }
 
+async function Logout() {
+    await fetch('/api/logout', { method: 'POST' });
+    window.location.href = '/login';
+}

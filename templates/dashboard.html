@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block nav %}
+    <a href="/dashboard">Tickete</a>
+    {% if user.role == 'MANAGER' %}<a href="/audit">Audit Log</a>{% endif %}
+    <a href="#" onclick="Logout()">Logout ({{ user.email }})</a>
+{% endblock %}
+{% block content %}
+<h1>Dashboard</h1>
+<p>Logat ca: {{ user.email }} ({{ user.role }})</p>
+
+<div class="card">
+    <h2>Ticket nou</h2>
+    <div id="ticket-message"></div>
+    <div class="form-group">
+        <label>Titlu</label>
+        <input type="text" id="t-title" placeholder="Titlu ticket">
+    </div>
+    <div class="form-group">
+        <label>Descriere</label>
+        <textarea id="t-desc" rows="3" placeholder="Descriere..."></textarea>
+    </div>
+    <div class="form-group">
+        <label>Severitate</label>
+        <select id="t-severity">
+            <option value="LOW">LOW</option>
+            <option value="MED">MED</option>
+            <option value="HIGH">HIGH</option>
+        </select>
+    </div>
+    <button class="btn btn-primary" onclick="createTicket()">Creaza Ticket</button>
+</div>
+
+<div class="card">
+    <div class="search-bar">
+        <input type="text" id="search-q" placeholder="Cauta tickete">
+        <button class="btn btn-primary" onclick="searchTickets()">Cauta</button>
+        <button class="btn btn-secondary" onclick="loadTickets()">Toate</button>
+    </div>
+</div>
+
+<div class="card">
+    <h2>Tickete</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Titlu</th>
+                <th>Severitate</th>
+                <th>Status</th>
+                <th>Actiuni</th>
+            </tr>
+        </thead>
+        <tbody id="tickets-table"></tbody>
+    </table>
+</div>
+{% endblock %}
+{% block scripts %}
+<script src="/static/js/dashboard.js"></script>
+{% endblock %}

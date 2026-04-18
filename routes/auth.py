@@ -213,3 +213,16 @@ def reset_password():
     db.session.commit()
 
     return jsonify({"message": f"Parola a fost resetata pt {user.email}"})
+
+
+def login_required(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        user = get_current_user()
+        if not user:
+            if request.is_json or request.path.startswith("/api/"):
+                return jsonify({"error": "Nu esti autentificat"}), 401
+            return redirect(url_for("auth.login_page"))
+        request.current_user = user
+        return f(*args, **kwargs)
+    return decorated
