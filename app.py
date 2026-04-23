@@ -5,6 +5,7 @@ from config import Config
 
 from routes.auth import auth_bp
 from routes.ticket import tickets_bp
+from routes.audit import audit_bp
 
 def create_app():
     app = Flask(__name__)
@@ -14,6 +15,7 @@ def create_app():
 
     app.register_blueprint(auth_bp)
     app.register_blueprint(tickets_bp)
+    app.register_blueprint(audit_bp)
 
     with app.app_context():
         db.create_all()

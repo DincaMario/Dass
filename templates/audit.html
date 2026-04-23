@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Audit Log{% endblock %}
+{% block nav %}
+    <a href="/dashboard">Tickete</a>
+    <a href="/audit">Audit Log</a>
+    <a href="#" onclick="Logout()">Logout ({{ user.email }})</a>
+{% endblock %}
+{% block content %}
+<h1>Audit Log</h1>
+<p class="subtitle">Vizibil doar pentru MANAGER</p>
+<div class="card">
+    <table>
+        <thead>
+            <tr>
+                <th>Timestamp</th>
+                <th>User ID</th>
+                <th>Actiune</th>
+                <th>Resursa</th>
+                <th>ID Resursa</th>
+                <th>IP</th>
+            </tr>
+        </thead>
+        <tbody id="audit-table"></tbody>
+    </table>
+</div>
+{% endblock %}
+{% block scripts %}
+<script src="/static/js/audit.js"></script>
+{% endblock %}

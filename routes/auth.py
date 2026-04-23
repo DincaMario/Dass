@@ -226,3 +226,24 @@ def login_required(f):
         request.current_user = user
         return f(*args, **kwargs)
     return decorated
+
+def manager_required(f):
+    @wraps(f)
+    @login_required
+    def decorated(*args, **kwargs):
+        if request.current_user.role != "MANAGER":
+            return jsonify({"error": "Acces Interzis"}), 403
+        return f(*args, **kwargs)
+    return decorated
+
+
+@auth_bp.route("/api/me", methods=["GET"])
+@login_required
+def me():
+    user = request.current_user
+    return jsonify({
+        "id": user.id,
+        "email": user.email,
+        "role": user.role,
+        "created_at": user.created_at.isoformat()
+    })
