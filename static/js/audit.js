@@ -1,5 +1,10 @@
 async function loadAuditLogs() {
     var res = await fetch('/api/audit-logs');
+    if (res.status == 401)
+    {
+        window.location.href = "/login";
+        return
+    }
     var logs = await res.json();
     var tbody = document.getElementById('audit-table');
 

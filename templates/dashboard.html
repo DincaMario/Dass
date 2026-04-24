@@ -14,11 +14,11 @@
     <div id="ticket-message"></div>
     <div class="form-group">
         <label>Titlu</label>
-        <input type="text" id="t-title" placeholder="Titlu ticket">
+        <input maxlength="50" type="text" id="t-title" placeholder="Titlu ticket">
     </div>
     <div class="form-group">
         <label>Descriere</label>
-        <textarea id="t-desc" rows="3" placeholder="Descriere..."></textarea>
+        <textarea maxlength="50" id="t-desc" rows="3" placeholder="Descriere..."></textarea>
     </div>
     <div class="form-group">
         <label>Severitate</label>
@@ -33,7 +33,7 @@
 
 <div class="card">
     <div class="search-bar">
-        <input type="text" id="search-q" placeholder="Cauta tickete">
+        <input maxlength="50" type="text" id="search-q" placeholder="Cauta tickete">
         <button class="btn btn-primary" onclick="searchTickets()">Cauta</button>
         <button class="btn btn-secondary" onclick="loadTickets()">Toate</button>
     </div>

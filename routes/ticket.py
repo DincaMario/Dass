@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify, render_template
 from datetime import datetime
+from markupsafe import escape
 
 from models import db, Ticket, AuditLog
 from routes.auth import login_required, get_current_user
@@ -18,7 +19,6 @@ def dashboard():
 def list_tickets():
     user = request.current_user
 
-    
     if user.role == "MANAGER":
         tickets = Ticket.query.all()
     else:
@@ -26,8 +26,8 @@ def list_tickets():
 
     return jsonify([{
         "id": t.id,
-        "title": t.title,
-        "description": t.description,  
+        "title": escape(t.title),
+        "description": escape(t.description) if t.description else "",
         "severity": t.severity,
         "status": t.status,
         "owner_id": t.owner_id,
@@ -42,16 +42,20 @@ def create_ticket():
     data = request.get_json()
     user = request.current_user
 
-    title = data.get("title", "")
-    description = data.get("description", "")
+    title = data.get("title", "").strip()
+    description = data.get("description", "").strip()
     severity = data.get("severity", "LOW")
 
-    if not title:
-        return jsonify({"error": "Titlul este obligatoriu"}), 400
+    if not title or len(title) > 255:
+        return jsonify({"error": "Titlul este obligatoriu (max 255 caractere)"}), 400
+    if severity not in ("LOW", "MED", "HIGH"):
+        return jsonify({"error": "Severitate invalida"}), 400
+    if len(description) > 5000:
+        return jsonify({"error": "Descrierea este prea lunga (max 5000 caractere)"}), 400
 
     ticket = Ticket(
         title=title,
-        description=description,  
+        description=description,
         severity=severity,
         owner_id=user.id
     )
@@ -72,12 +76,15 @@ def create_ticket():
 @login_required
 def get_ticket(ticket_id):
     ticket = Ticket.query.get_or_404(ticket_id)
+    user = request.current_user
 
+    if user.role != "MANAGER" and ticket.owner_id != user.id:
+        return jsonify({"error": "Acces interzis"}), 403
 
     return jsonify({
         "id": ticket.id,
-        "title": ticket.title,
-        "description": ticket.description,
+        "title": escape(ticket.title),
+        "description": escape(ticket.description) if ticket.description else "",
         "severity": ticket.severity,
         "status": ticket.status,
         "owner_id": ticket.owner_id,
@@ -91,14 +98,27 @@ def update_ticket(ticket_id):
     ticket = Ticket.query.get_or_404(ticket_id)
     user = request.current_user
 
+    if user.role != "MANAGER" and ticket.owner_id != user.id:
+        return jsonify({"error": "Acces interzis"}), 403
+
     data = request.get_json()
     if "title" in data:
-        ticket.title = data["title"]
+        title = data["title"].strip()
+        if not title or len(title) > 255:
+            return jsonify({"error": "Titlu invalid"}), 400
+        ticket.title = title
     if "description" in data:
-        ticket.description = data["description"]
+        desc = data["description"].strip()
+        if len(desc) > 5000:
+            return jsonify({"error": "Descriere prea lunga"}), 400
+        ticket.description = desc
     if "severity" in data:
+        if data["severity"] not in ("LOW", "MED", "HIGH"):
+            return jsonify({"error": "Severitate invalida"}), 400
         ticket.severity = data["severity"]
     if "status" in data:
+        if data["status"] not in ("OPEN", "IN_PROGRESS", "RESOLVED"):
+            return jsonify({"error": "Status invalid"}), 400
         ticket.status = data["status"]
 
     ticket.updated_at = datetime.utcnow()
@@ -120,6 +140,9 @@ def delete_ticket(ticket_id):
     ticket = Ticket.query.get_or_404(ticket_id)
     user = request.current_user
 
+    if user.role != "MANAGER" and ticket.owner_id != user.id:
+        return jsonify({"error": "Acces interzis"}), 403
+
     db.session.delete(ticket)
     db.session.commit()
 
@@ -133,22 +156,25 @@ def delete_ticket(ticket_id):
     return jsonify({"message": "Ticket sters"})
 
 
-
 @tickets_bp.route("/api/tickets/search", methods=["GET"])
 @login_required
 def search_tickets():
-    query = request.args.get("q", "")
+    query = request.args.get("q", "").strip()
     user = request.current_user
 
-    
-    tickets = Ticket.query.filter(
-        Ticket.title.ilike(f"%{query}%")
-    ).all()
+    if not query or len(query) > 200:
+        return jsonify([])
+
+    base_query = Ticket.query.filter(Ticket.title.ilike(f"%{query}%"))
+    if user.role != "MANAGER":
+        base_query = base_query.filter_by(owner_id=user.id)
+
+    tickets = base_query.limit(50).all()
 
     return jsonify([{
         "id": t.id,
-        "title": t.title,
-        "description": t.description,
+        "title": escape(t.title),
+        "description": escape(t.description) if t.description else "",
         "severity": t.severity,
         "status": t.status,
         "owner_id": t.owner_id

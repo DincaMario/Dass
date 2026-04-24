@@ -99,12 +99,14 @@ async function editTicket(id) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: newStatus })
     });
+    if (res.status === 403) alert('Acces interzis – nu esti proprietarul ticketului');
     loadTickets();
 }
 
 async function deleteTicket(id) {
     if (!confirm('Sigur vrei sa stergi acest ticket?')) return;
     await fetch('/api/tickets/' + id, { method: 'DELETE' });
+    if (res.status === 403) alert('Acces interzis – nu esti proprietarul ticketului');
     loadTickets();
 }
 

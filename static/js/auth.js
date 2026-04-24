@@ -20,6 +20,20 @@ async function Register(){
     }
 }
 
+
+function showErrorWithDetails(containerId, error, details) {
+    var html = '<div class="alert alert-error">' + error;
+    if (details && details.length > 0) {
+        html += '<ul>';
+        for (var i = 0; i < details.length; i++) {
+            html += '<li>' + details[i] + '</li>';
+        }
+        html += '</ul>';
+    }
+    html += '</div>';
+    document.getElementById(containerId).innerHTML = html;
+}
+
 async function Login(){
     var email = document.getElementById('email').value
     var password = document.getElementById('password').value;
@@ -65,46 +79,13 @@ async function Forgot() {
     });
     var data = await res.json();
 
-    if (res.ok) {
-        var messageText = document.createTextNode(data.message);
+    showMessage('message', 'success', data.message);
 
-        var br1 = document.createElement('br');
-        var br2 = document.createElement('br');
-
-        var linkLabel = document.createElement('b');
-        linkLabel.textContent = 'Link: ';
-
-        var anchor = document.createElement('a');
-        anchor.href = data.reset_link;
-        anchor.textContent = data.reset_link;
-
-        var br3 = document.createElement('br');
-
-        var tokenLabel = document.createElement('b');
-        tokenLabel.textContent = 'Token: ';
-
-        var tokenText = document.createTextNode(data.token);
-
-        var wrapper = document.createElement('span');
-        wrapper.appendChild(messageText);
-        wrapper.appendChild(br1);
-        wrapper.appendChild(br2);
-        wrapper.appendChild(linkLabel);
-        wrapper.appendChild(anchor);
-        wrapper.appendChild(br3);
-        wrapper.appendChild(tokenLabel);
-        wrapper.appendChild(tokenText);
-
-        var container = document.getElementById('message');
-        container.innerHTML = '';
-
-        var alert = document.createElement('div');
-        alert.className = 'alert';
-        alert.appendChild(wrapper);
-
-        container.appendChild(alert);
-    } else {
-        showMessage('message', 'error', data.error);
+    
+    if (data._debug_link) {
+        var msgDiv = document.getElementById('message');
+        msgDiv.innerHTML += '<div class="alert" >'
+            + 'Debug (lab): <a href="' + data._debug_link + '">' + data._debug_link + '</a></div>';
     }
 }
 

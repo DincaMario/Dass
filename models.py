@@ -13,6 +13,7 @@ class User(db.Model):
     role = db.Column(db.String(20), default="ANALYST")  
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     locked = db.Column(db.Boolean, default=False)
+    locked_until = db.Column(db.DateTime, nullable=True) 
     failed_attempts = db.Column(db.Integer, default=0)
 
     tickets = db.relationship("Ticket", backref="owner", lazy=True)
@@ -39,7 +40,7 @@ class PasswordReset(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     token = db.Column(db.String(255), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    
+    expires_at = db.Column(db.DateTime, nullable=False)    
     used = db.Column(db.Boolean, default=False)  
 
 
@@ -53,3 +54,4 @@ class AuditLog(db.Model):
     resource_id = db.Column(db.String(50))
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
     ip_address = db.Column(db.String(45))
+    details = db.Column(db.Text, nullable=True)

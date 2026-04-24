@@ -22,5 +22,6 @@ def list_audit_logs():
         "resource": l.resource,
         "resource_id": l.resource_id,
         "timestamp": l.timestamp.isoformat(),
-        "ip_address": l.ip_address
+        "ip_address": l.ip_address,
+        "details": l.details
     } for l in logs])

@@ -13,3 +13,49 @@ nav{
     margin: 24px auto;
     padding: 0 16px
 }
+
+
+.form-hint {
+    font-size: 12px;
+    color: #999;
+    margin-top: 4px;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+select,
+textarea {
+    width: 30%;
+    padding: 8px 10px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    font-size: 14px;
+    background: #fff;
+}
+
+
+
+.btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.btn-primary {
+    background: #27ae60;
+    color: #fff;
+}
+
+.btn-primary:hover {
+    background: #1e8449;
+}
+
+.alert {
+    padding: 10px 14px;
+    border-radius: 3px;
+    margin-bottom: 12px;
+    font-size: 14px;
+}
