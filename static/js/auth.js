@@ -82,10 +82,10 @@ async function Forgot() {
     showMessage('message', 'success', data.message);
 
     
-    if (data._debug_link) {
+    if (data.reset_link) {
         var msgDiv = document.getElementById('message');
         msgDiv.innerHTML += '<div class="alert" >'
-            + 'Debug (lab): <a href="' + data._debug_link + '">' + data._debug_link + '</a></div>';
+            + 'Debug (lab): <a href="' + data.reset_link + '">' + data.reset_link + '</a></div>';
     }
 }
 
