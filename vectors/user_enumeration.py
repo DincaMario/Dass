@@ -4,7 +4,7 @@ import time
 
 
 TEST_EMAILS = [
-    "admin@test.ro",
+    # "admin@test.ro",
     "analyst@test.ro",
     "john@test.ro",
     "test@test.ro",

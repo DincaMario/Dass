@@ -42,4 +42,52 @@ def crack_md5_hashes(db_dump, wordlist):
     return cracked
 
 
+def demonstrate_bcrypt_resistance():
+    print("Comparatie: Bcrypt")
+
+    password = "password"
+
+    start = time.time()
+    for _ in range(10000):
+        hashlib.md5(password.encode()).hexdigest()
+    md5_time = time.time() - start
+    md5_per_sec = 10000 / md5_time
+
+    print(f"10 mii de hash-uri in {md5_time*1000:.1f}ms")
+    print(f"Viteza: {md5_per_sec:,.0f} hash/sec")
+
+    try:
+        import bcrypt
+        start = time.time()
+        bcrypt.hashpw(password.encode(), bcrypt.gensalt(rounds=12))
+        bcrypt_one = time.time() - start
+        bcrypt_per_sec = 1 / bcrypt_one
+
+        print(f"1 hash in {bcrypt_one*1000:.1f}ms")
+        print(f"Viteza: {bcrypt_per_sec:.1f}hash/sec")
+    except ImportError:
+        print("Eroare")
+    
+    h1 = hashlib.md5(b"password").hexdigest()
+    h2 = hashlib.md5(b"password").hexdigest()
+
+    print(f"h1: {h1}")
+    print(f"h2: {h2}")
+
+    if h1 == h2:
+        print("Rainbow tables functioneaza pe md5")
+    
+    try:
+        import bcrypt
+        b1 = bcrypt.hashpw(b"password", bcrypt.gensalt()).decode()
+        b2 = bcrypt.hashpw(b"password", bcrypt.gensalt()).decode()
+        print(f"b1: {b1}")
+        print(f"b2: {b2}")
+        if b1 == b2:
+            print("Rainbow tables functioneaza pe bcrypt")
+    except:
+        print("Eroare")
+
+
 crack_md5_hashes(DATABASE, WORDLIST)
+demonstrate_bcrypt_resistance()
