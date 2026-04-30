@@ -13,7 +13,7 @@ async function loadAuditLogs() {
     for (var i = 0; i < logs.length; i++) {
         var log = logs[i];
         var tr = document.createElement('tr');
-        var fields = [log.timestamp, log.user_id, log.action, log.resource, log.resource_id, log.ip_address];
+        var fields = [log.timestamp, log.user_id, log.action, log.resource, log.resource_id, log.ip_address, log.details];
 
         for (var j = 0; j < fields.length; j++) {
             var td = document.createElement('td');
